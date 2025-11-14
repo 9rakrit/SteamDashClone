@@ -1,0 +1,10 @@
+flask==3.0.3
+requests==2.32.3
+numpy==1.26.4
+pandas==2.2.2
+prophet==1.1.5
+praw==7.7.1
+nltk==3.9.1
+Flask
+requests
+scikit-learn

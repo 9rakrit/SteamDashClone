@@ -1,0 +1,45 @@
+body {
+  background:#0d1117; color:#fff;
+  font-family: "Inter", sans-serif;
+  padding:20px; text-align:center;
+}
+
+h1 { font-size:32px; margin-bottom:20px; }
+
+.top-bar {
+  display:flex; justify-content:center; gap:10px;
+}
+
+input {
+  width:300px; padding:10px; border-radius:10px;
+  background:#1f2937; color:white; border:none;
+}
+
+button {
+  background:#6366f1; padding:10px 16px; border-radius:10px; color:white;
+  border:none; cursor:pointer;
+}
+
+#results {
+  background:#111827; width:350px; margin:10px auto;
+  list-style:none; padding:0; border-radius:10px;
+  max-height:250px; overflow:auto; display:none;
+}
+
+#results li {
+  padding:10px; cursor:pointer;
+}
+#results li:hover { background:#182034; }
+
+.stats-row {
+  display:flex; justify-content:center; gap:16px; margin:16px 0;
+}
+
+.tile {
+  background:#111827; padding:16px; border-radius:10px;
+  min-width:200px; text-align:center;
+}
+
+.chart-card {
+  background:#111827; padding:16px; border-radius:12px; margin-top:20px;
+}

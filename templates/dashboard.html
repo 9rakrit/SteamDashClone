@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Game Popularity Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <h1>🎮 Game Popularity Dashboard</h1>
+
+  <div class="top-bar">
+    <input id="q" placeholder="Search a game (e.g., elden ring, cs2)" />
+    <button id="search-btn">Search</button>
+  </div>
+
+  <ul id="results"></ul>
+
+  <div class="stats-row">
+    <div class="tile">
+      <label>Selected</label>
+      <span id="selected-name">—</span>
+    </div>
+    <div class="tile">
+      <label>AppID</label>
+      <span id="selected-appid">—</span>
+    </div>
+    <div class="tile">
+      <label>Current Players</label>
+      <span id="current-players">—</span>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="label">Last 30 days • Forecast next 30 days</div>
+    <canvas id="chart"></canvas>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
