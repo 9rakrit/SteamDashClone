@@ -34,42 +34,26 @@ def history(appid):
     last_30 = [p[1] for p in data[-30:]]
     return jsonify(last_30)
 
-from prophet import Prophet
-import pandas as pd
-
-from statsmodels.tsa.holtwinters import ExponentialSmoothing
-
 @app.route("/api/forecast/<appid>")
 def forecast(appid):
     url = f"https://steamcharts.com/app/{appid}/chart-data.json"
     data = requests.get(url).json()
-    last_30 = np.array([p[1] for p in data[-30:]]).astype(float)
+    last_30 = np.array([p[1] for p in data[-30:]])
 
-    # Identify last 7-day pattern
-    base = last_30[-7:]
+    x = np.arange(len(last_30))
+    slope, intercept = np.polyfit(x, last_30, 1)
+    future = []
+    last_val = last_30[-1]
 
-    # Repeat weekly pattern across 30 days
-    forecast_vals = np.tile(base, 5)[:30]
+    for i in range(1, 31):
+        seasonal = np.sin(i / 3) * 2000
+        y = last_val + slope * i + seasonal
+        future.append(max(int(y), 0))
 
-    # Smooth transition start point
-    smooth_start = last_30[-1]
-    adjust_factor = (smooth_start / base[0]) if base[0] != 0 else 1
-    forecast_vals = forecast_vals * adjust_factor
+    high = [int(v * 1.15) for v in future]
+    low = [int(v * 0.85) for v in future]
 
-    # High and low confidence ranges
-    high = [int(v * 1.08) for v in forecast_vals]
-    low = [int(v * 0.92) for v in forecast_vals]
-
-    return jsonify({
-        "forecast": [int(v) for v in forecast_vals],
-        "high": high,
-        "low": low
-    })
-
-
-
-
-
+    return jsonify({"forecast": future, "high": high, "low": low})
 
 @app.route("/api/cover/<appid>")
 def cover(appid):

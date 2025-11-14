@@ -1,121 +1,183 @@
+/* Steam-Inspired UI Theme */
 :root {
-  --bg:#0d1117;
-  --card:rgba(17,24,39,0.55);
-  --text:#e5e7eb;
-  --accent:#6366f1;
-  --shadow:0 0 30px rgba(0,0,0,.45);
+  --bg:#1b2838;
+  --card:#0e151f;
+  --text:#c7d5e0;
+  --accent:#1b6dff;
+  --shadow:0 0 12px rgba(0,0,0,.55);
 }
 
 body {
   margin:0;
+  padding:24px;
   background:var(--bg);
   color:var(--text);
-  font-family:"Inter", sans-serif;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:24px;
-}
-
-.theme-btn {
-  position:absolute;
-  top:20px;
-  right:20px;
-  background:var(--accent);
-  color:white;
-  border:none;
-  padding:10px 16px;
-  border-radius:14px;
-  cursor:pointer;
+  font-family:"Inter","Roboto Condensed",sans-serif;
+  text-align:center;
 }
 
 h1 {
   font-size:40px;
-  margin-bottom:16px;
+  margin-bottom:18px;
+  font-weight:700;
+  color:#ffffff;
+  text-shadow:0 0 12px rgba(0,0,0,0.6);
 }
 
+/* Search Bar */
 .top-bar {
   display:flex;
   justify-content:center;
-  width:100%;
+  gap:12px;
   max-width:900px;
-  gap:10px;
+  margin:auto;
 }
 
 input {
   flex:1;
   padding:14px;
-  border-radius:14px;
-  border:none;
-  background:rgba(255,255,255,0.08);
-  color:white;
+  border-radius:6px;
+  border:1px solid #2a475e;
+  background:#0e151f;
+  color:#c7d5e0;
+  font-size:16px;
+}
+
+input:focus {
+  outline:none;
+  border-color:#1b6dff;
+  box-shadow:0 0 8px rgba(27,109,255,0.45);
 }
 
 button {
   padding:14px 18px;
-  border-radius:14px;
-  background:var(--accent);
+  border-radius:6px;
+  background:linear-gradient(180deg,#1b6dff,#1155cc);
   border:none;
-  color:white;
   cursor:pointer;
+  font-weight:600;
+  color:white;
   transition:0.2s;
 }
 
 button:hover {
-  transform:translateY(-2px);
+  transform:translateY(-1px);
+  box-shadow:0 0 10px rgba(27,109,255,0.5);
 }
 
+/* Search Results */
 #results {
-  width:100%;
   max-width:900px;
-  background:var(--card);
-  border-radius:14px;
-  margin-top:10px;
-  padding:0;
-  list-style:none;
+  margin:12px auto;
+  background:#0e151f;
+  border-radius:6px;
+  border:1px solid #2a475e;
   display:none;
-  overflow:hidden;
+  list-style:none;
+  padding:0;
   box-shadow:var(--shadow);
 }
 
 #results li {
-  padding:14px 18px;
+  padding:12px 16px;
   cursor:pointer;
+  border-bottom:1px solid #1c2e3e;
+  transition:0.15s;
 }
 
 #results li:hover {
-  background:rgba(255,255,255,0.1);
+  background:#22394d;
 }
 
+/* Stats Row */
 .stats-row {
   display:flex;
+  justify-content:center;
   gap:18px;
-  margin-top:20px;
+  margin-top:22px;
 }
 
+/* Card Layout */
 .tile {
-  background:var(--card);
-  padding:18px;
-  border-radius:14px;
-  width:260px;
+  background:#0e151f;
+  padding:16px;
+  border-radius:6px;
+  width:240px;
   box-shadow:var(--shadow);
-  text-align:center;
+  border:1px solid #2a475e;
+  font-size:20px;
+  font-weight:600;
 }
 
+.tile label {
+  display:block;
+  font-size:13px;
+  margin-bottom:4px;
+  letter-spacing:0.5px;
+  color:#8fa6b8;
+}
+
+/* Cover Image Box */
+.cover-tile {
+  width:240px;
+  height:140px;
+  border-radius:6px;
+  overflow:hidden;
+  background:#111;
+  border:1px solid #2a475e;
+  box-shadow:var(--shadow);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.cover-tile img {
+  width:100%; height:100%; object-fit:cover;
+}
+
+/* Chart Card */
 .chart-card {
-  width:100%;
   max-width:1400px;
-  background:var(--card);
-  border-radius:16px;
-  padding:22px;
-  margin-top:26px;
+  margin:28px auto;
+  background:#0e151f;
+  padding:24px;
+  border-radius:6px;
+  border:1px solid #2a475e;
   box-shadow:var(--shadow);
 }
 
-body.neon {
+.label {
+  font-size:15px;
+  color:#8fa6b8;
+  margin-bottom:10px;
+}
+
+/* Theme toggle button */
+.theme-btn {
+  position:absolute;
+  top:16px;
+  right:16px;
+  padding:10px;
+  border-radius:50%;
+  background:#22394d;
+  border:1px solid #2a475e;
+  color:white;
+  cursor:pointer;
+  font-size:20px;
+  width:44px;
+  height:44px;
+}
+
+.theme-btn:hover {
+  background:#1b6dff;
+  box-shadow:0 0 10px rgba(27,109,255,.5);
+}
+
+/* Neon theme preserved */
+.neon {
   --bg:#050014;
   --card:rgba(0,0,50,0.6);
-  --text:#e0faff;
+  --text:#d4faff;
   --accent:#00eaff;
   --shadow:0 0 25px #00eaffaa;
 }

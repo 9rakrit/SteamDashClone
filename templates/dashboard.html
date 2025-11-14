@@ -9,7 +9,6 @@
 
 <body>
   <button id="theme-toggle" class="theme-btn">🌙</button>
-
   <h1>🎮 Game Popularity Dashboard</h1>
 
   <div class="top-bar">
@@ -20,18 +19,31 @@
   <ul id="results"></ul>
 
   <div class="stats-row">
+
+    <div class="cover-tile">
+      <img id="cover-img" src="" alt="Game Cover" />
+    </div>
+
     <div class="tile">
       <label>Selected</label>
       <span id="selected-name">—</span>
     </div>
+
     <div class="tile">
       <label>AppID</label>
       <span id="selected-appid">—</span>
     </div>
+
     <div class="tile">
       <label>Current Players</label>
       <span id="current-players">—</span>
     </div>
+
+    <div class="tile">
+      <label>Avg / Peak (30d)</label>
+      <span id="avg-peak">—</span>
+    </div>
+
   </div>
 
   <div class="chart-card">
