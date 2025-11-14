@@ -8,7 +8,6 @@ app = Flask(__name__)
 def home():
     return render_template("dashboard.html")
 
-# ================= SEARCH =================
 @app.route("/api/search")
 def search():
     q = request.args.get("query", "")
@@ -19,7 +18,6 @@ def search():
     except:
         return jsonify([])
 
-# ================= CURRENT PLAYERS =================
 @app.route("/api/players/<appid>")
 def players(appid):
     url = f"https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid={appid}"
@@ -29,7 +27,6 @@ def players(appid):
     except:
         return jsonify(0)
 
-# ================= HISTORY =================
 @app.route("/api/history/<appid>")
 def history(appid):
     url = f"https://steamcharts.com/app/{appid}/chart-data.json"
@@ -40,7 +37,6 @@ def history(appid):
     except:
         return jsonify([])
 
-# ================= FORECAST =================
 @app.route("/api/forecast/<appid>")
 def forecast(appid):
     url = f"https://steamcharts.com/app/{appid}/chart-data.json"
@@ -61,7 +57,6 @@ def forecast(appid):
     low = [int(v * 0.85) for v in future]
 
     return jsonify({"forecast": future, "high": high, "low": low})
-    
 
 if __name__ == "__main__":
     app.run(debug=True)
