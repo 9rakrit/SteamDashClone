@@ -1,10 +1,19 @@
 let chart;
+let compareMode = false;
+let secondGame = null;
+
 
 document.getElementById("search-btn").addEventListener("click", () => {
     let q = document.getElementById("q").value.trim();
     if (!q) return;
     searchGames(q);
 });
+
+document.getElementById("compare-btn").addEventListener("click", () => {
+  compareMode = true;
+  alert("Compare Mode Active: Search and select a second game to overlay.");
+});
+
 
 async function searchGames(query) {
     const resultsBox = document.getElementById("results");
@@ -17,7 +26,15 @@ async function searchGames(query) {
     games.forEach(game => {
         const li = document.createElement("li");
         li.textContent = `${game.name} (AppID: ${game.appid})`;
-        li.onclick = () => loadGame(game.name, game.appid);
+        li.onclick = () => {
+    if (!compareMode) {
+        loadGame(game.name, game.appid);
+    } else {
+        loadSecondGame(game.appid, game.name);
+        compareMode = false;
+    }
+};
+
         resultsBox.appendChild(li);
     });
 }
@@ -118,6 +135,30 @@ function drawChart(history, forecast, high, low) {
     });
 }
 
+function renderComparison() {
+  if (!chart) return;
+
+  chart.data.datasets.push({
+    label: `${secondGame.name} (Actual)`,
+    data: secondGame.history,
+    borderColor: "#c77dff",
+    borderWidth: 2,
+    tension: 0.3
+  });
+
+  chart.data.datasets.push({
+    label: `${secondGame.name} (Forecast)`,
+    data: [...Array(secondGame.history.length).fill(null), ...secondGame.forecast],
+    borderColor: "#c77dff77",
+    borderDash: [6, 6],
+    borderWidth: 2,
+    tension: 0.3
+  });
+
+  chart.update();
+}
+
+
 // ---- THEME MODE TOGGLE ----
 const themeToggle = document.getElementById("theme-toggle");
 const themeIcon = document.getElementById("theme-icon");
@@ -133,3 +174,82 @@ themeToggle.addEventListener("click", () => {
     themeIcon.textContent = theme === "dark" ? "🌙" : "☀️";
     localStorage.setItem("theme", theme);
 });
+
+function padHistoryData(data, targetLength) {
+    const padAmount = targetLength - data.length;
+    return [...Array(padAmount).fill(null), ...data];
+}
+
+function padForecast(data, historyLength) {
+    // historyLength = how many history points the main game has (e.g. 30)
+    return [...Array(historyLength).fill(null), ...data];
+}
+
+
+
+
+async function loadSecondGame(appid, name) {
+
+  // --- HISTORY DATA ---
+  const historyRes = await fetch(`/api/history/${appid}`);
+  const historyData = await historyRes.json();   // already an array of numbers
+  let secondHistory = historyData.slice();       // copy
+  // pad second history to align x-axis with main chart
+  // Ensure both histories have equal length (last 30 days)
+const mainHistoryLength = chart.data.datasets[0].data.length;
+secondHistory = secondHistory.slice(-mainHistoryLength);
+
+
+  // Add overlay history dataset
+  chart.data.datasets.push({
+      label: `${name} History`,
+      data: secondHistory,
+      borderColor: "orange",
+      backgroundColor: "rgba(255,140,0,0.2)",
+      borderWidth: 2,
+      pointRadius: 2,
+      tension: 0.3
+  });
+
+
+
+
+   // --- FORECAST DATA ---
+  const forecastRes = await fetch(`/api/forecast/${appid}`);
+  const forecastData = await forecastRes.json();
+
+  const secondForecast = forecastData.forecast;
+  const secondHigh     = forecastData.high;
+  const secondLow      = forecastData.low;
+
+  const mainHistoryLen = chart.data.datasets[0].data.length; // base game history length
+
+  chart.data.datasets.push({
+      label: `${name} Forecast`,
+      data: padForecast(secondForecast, mainHistoryLen),
+      borderColor: "rgb(255,215,0)",
+      borderWidth: 2,
+      borderDash: [6,4],
+      tension: 0.3
+  });
+
+  chart.data.datasets.push({
+      label: `${name} High`,
+      data: padForecast(secondHigh, mainHistoryLen),
+      borderColor: "rgb(255,255,102)",
+      borderDash: [6,4],
+      tension: 0.3
+  });
+
+  chart.data.datasets.push({
+      label: `${name} Low`,
+      data: padForecast(secondLow, mainHistoryLen),
+      borderColor: "rgb(255,99,71)",
+      borderDash: [6,4],
+      tension: 0.3
+  });
+
+  chart.update();
+}
+
+

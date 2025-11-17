@@ -201,3 +201,21 @@ html.light,
 html.dark {
     transition: background 0.4s, color 0.4s;
 }
+
+
+.icon-btn {
+  background: var(--accent);
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: none;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: 0.25s ease;
+}
+
+.icon-btn:hover {
+  transform: scale(1.05);
+  background: #7d82ff;
+}
