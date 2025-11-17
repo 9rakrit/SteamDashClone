@@ -6,6 +6,22 @@
   --accent:#1b6dff;
   --shadow:0 0 12px rgba(0,0,0,.55);
 }
+html.light {
+  --bg:#f2f2f2;
+  --card:#ffffffcc;
+  --text:#111;
+  --accent:#4f46e5;
+  --shadow:0 0 15px rgba(0,0,0,.15);
+}
+
+html.dark {
+  --bg:#0d1117;
+  --card:rgba(17,24,39,0.55);
+  --text:#e5e7eb;
+  --accent:#6366f1;
+  --shadow:0 0 30px rgba(0,0,0,.45);
+}
+
 
 body {
   margin:0;
@@ -14,6 +30,16 @@ body {
   color:var(--text);
   font-family:"Inter","Roboto Condensed",sans-serif;
   text-align:center;
+
+  .tile {
+  background:var(--card);
+  color:var(--text);
+  * {
+  transition: background-color .25s ease, color .25s ease;
+}
+}
+
+
 }
 
 h1 {
@@ -154,30 +180,24 @@ button:hover {
 
 /* Theme toggle button */
 .theme-btn {
-  position:absolute;
-  top:16px;
-  right:16px;
-  padding:10px;
-  border-radius:50%;
-  background:#22394d;
-  border:1px solid #2a475e;
-  color:white;
-  cursor:pointer;
-  font-size:20px;
-  width:44px;
-  height:44px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--tile-bg);
+    border: none;
+    padding: 10px 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    transition: 0.3s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
 .theme-btn:hover {
-  background:#1b6dff;
-  box-shadow:0 0 10px rgba(27,109,255,.5);
+    transform: scale(1.1);
 }
 
-/* Neon theme preserved */
-.neon {
-  --bg:#050014;
-  --card:rgba(0,0,50,0.6);
-  --text:#d4faff;
-  --accent:#00eaff;
-  --shadow:0 0 25px #00eaffaa;
+html.light,
+html.dark {
+    transition: background 0.4s, color 0.4s;
 }

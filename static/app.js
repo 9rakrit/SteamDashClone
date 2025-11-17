@@ -117,3 +117,19 @@ function drawChart(history, forecast, high, low) {
         }
     });
 }
+
+// ---- THEME MODE TOGGLE ----
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = document.getElementById("theme-icon");
+
+// Load saved theme
+let theme = localStorage.getItem("theme") || "dark";
+document.documentElement.className = theme;
+themeIcon.textContent = theme === "dark" ? "🌙" : "☀️";
+
+themeToggle.addEventListener("click", () => {
+    theme = theme === "dark" ? "light" : "dark";
+    document.documentElement.className = theme;
+    themeIcon.textContent = theme === "dark" ? "🌙" : "☀️";
+    localStorage.setItem("theme", theme);
+});
