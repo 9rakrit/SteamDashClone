@@ -117,5 +117,3 @@ function drawChart(history, forecast, high, low) {
         }
     });
 }
-
-

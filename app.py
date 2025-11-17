@@ -41,30 +41,35 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
 @app.route("/api/forecast/<appid>")
 def forecast(appid):
+    import numpy as np
+    import requests
+    from statsmodels.nonparametric.smoothers_lowess import lowess
+
     url = f"https://steamcharts.com/app/{appid}/chart-data.json"
     data = requests.get(url).json()
-    last_30 = np.array([p[1] for p in data[-30:]]).astype(float)
 
-    # Identify last 7-day pattern
-    base = last_30[-7:]
+    last_30 = np.array([p[1] for p in data[-30:]], dtype=float)
 
-    # Repeat weekly pattern across 30 days
-    forecast_vals = np.tile(base, 5)[:30]
+    # LOWESS smoothing for curve shape
+    x = np.arange(len(last_30))
+    smoothed = lowess(last_30, x, frac=0.25, return_sorted=False)
 
-    # Smooth transition start point
-    smooth_start = last_30[-1]
-    adjust_factor = (smooth_start / base[0]) if base[0] != 0 else 1
-    forecast_vals = forecast_vals * adjust_factor
+    # Rate of change from last few points
+    recent_slope = np.mean(np.diff(smoothed[-5:]))
 
-    # High and low confidence ranges
-    high = [int(v * 1.08) for v in forecast_vals]
-    low = [int(v * 0.92) for v in forecast_vals]
+    forecast = []
+    value = smoothed[-1]
 
-    return jsonify({
-        "forecast": [int(v) for v in forecast_vals],
-        "high": high,
-        "low": low
-    })
+    for i in range(30):
+        decay = (1 - i / 40)  # dampen slope gradually
+        seasonal = np.sin(i / 6) * 120  # soft seasonality
+        value += recent_slope * decay
+        forecast.append(int(value + seasonal))
+
+    high = [int(v * 1.05) for v in forecast]
+    low = [int(v * 0.95) for v in forecast]
+
+    return jsonify({"forecast": forecast, "high": high, "low": low})
 
 
 
