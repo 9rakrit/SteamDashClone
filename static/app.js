@@ -67,11 +67,21 @@ async function loadGame(name, appid) {
     document.getElementById("avg-peak").innerText =
         `${avg.toLocaleString()} / ${peak.toLocaleString()}`;
 
+
+    loadDetails(appid);
+
+    loadNews(appid);
+
+
+
     // ---- FORECAST ----
     const forecastRes = await fetch(`/api/forecast/${appid}`);
     const forecastData = await forecastRes.json();
 
     drawChart(history, forecastData.forecast, forecastData.high, forecastData.low);
+
+
+    
 
     // REVIEWS
     loadReviews(appid);
@@ -278,3 +288,42 @@ secondHistory = secondHistory.slice(-mainHistoryLength);
 
   chart.update();
 }
+
+
+async function loadDetails(appid) {
+    const res = await fetch(`/api/details/${appid}`);
+    const d = await res.json();
+
+    document.getElementById("details-desc").innerText = d.desc || "No description available.";
+    document.getElementById("details-release").innerText = d.release;
+    document.getElementById("details-dev").innerText = d.developer.join(", ");
+    document.getElementById("details-pub").innerText = d.publisher.join(", ");
+    document.getElementById("details-genres").innerText = d.genres.join(", ");
+}
+
+
+async function loadNews(appid) {
+  const res = await fetch(`/api/news/${appid}`);
+  const news = await res.json();
+
+  const list = document.getElementById("news-list");
+  list.innerHTML = "";
+
+  if (!news.length) {
+      list.innerHTML = "<p>No recent news available.</p>";
+      return;
+  }
+
+  news.forEach(article => {
+      const li = document.createElement("li");
+      li.className = "news-item";
+      li.innerHTML = `
+        <strong>${article.title}</strong><br>
+        <small>${new Date(article.date * 1000).toLocaleDateString()}</small><br>
+        ${article.contents.substring(0, 180)}... 
+        <br><a href="${article.url}" target="_blank">Read more →</a>
+      `;
+      list.appendChild(li);
+  });
+}
+

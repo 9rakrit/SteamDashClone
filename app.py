@@ -114,6 +114,36 @@ def get_reviews(appid):
     return jsonify(r.json())
 
 
+@app.route("/api/details/<appid>")
+def game_details(appid):
+    url = f"https://store.steampowered.com/api/appdetails?appids={appid}"
+    try:
+        r = requests.get(url).json()
+        data = r[str(appid)]["data"]
+        return jsonify({
+            "name": data.get("name"),
+            "release": data.get("release_date", {}).get("date", "Unknown"),
+            "developer": data.get("developers", ["Unknown"]),
+            "publisher": data.get("publishers", ["Unknown"]),
+            "genres": [g["description"] for g in data.get("genres", [])],
+            "desc": data.get("short_description", ""),
+            "header": data.get("header_image", "")
+        })
+    except:
+        return jsonify({})
+
+
+
+@app.route("/api/news/<appid>")
+def game_news(appid):
+    url = f"https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid={appid}&count=5&maxlength=300"
+    try:
+        return jsonify(requests.get(url).json()["appnews"]["newsitems"])
+    except:
+        return jsonify([])
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
