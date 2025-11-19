@@ -326,4 +326,3 @@ async function loadNews(appid) {
       list.appendChild(li);
   });
 }
-
