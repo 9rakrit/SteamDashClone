@@ -278,5 +278,3 @@ secondHistory = secondHistory.slice(-mainHistoryLength);
 
   chart.update();
 }
-
-

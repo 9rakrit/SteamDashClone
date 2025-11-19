@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 import requests
 import numpy as np
+import time
+from functools import lru_cache
+
 
 app = Flask(__name__)
 
@@ -27,15 +30,25 @@ def players(appid):
     except:
         return jsonify(0)
 
+@lru_cache(maxsize=50)
+def fetch_history(appid):
+    url = f"https://steamcharts.com/app/{appid}/chart-data.json"
+    time.sleep(0.5)  # small delay to avoid rate limiting
+    r = requests.get(url, timeout=10)
+    return r.json()
+
+
 @app.route("/api/history/<appid>")
 def history(appid):
-    url = f"https://steamcharts.com/app/{appid}/chart-data.json"
-    data = requests.get(url).json()
-    last_30 = [p[1] for p in data[-30:]]
-    return jsonify(last_30)
+    try:
+        data = fetch_history(appid)
+        history_values = [row[1] for row in data[-30:]]  # last 30 days
+        return jsonify(history_values)
+    except Exception as e:
+        print("History Error:", str(e))
+        return jsonify([])
 
-from prophet import Prophet
-import pandas as pd
+
 
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
