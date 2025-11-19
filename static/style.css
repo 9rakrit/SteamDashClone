@@ -219,3 +219,20 @@ html.dark {
   transform: scale(1.05);
   background: #7d82ff;
 }
+
+
+#reviews-container {
+    margin-top: 15px;
+    padding: 15px;
+    background: #0f172a;
+    border-radius: 10px;
+}
+
+.review-card {
+    background: #1e293b;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    color: #e0e0e0;
+    border: 1px solid #334155;
+}

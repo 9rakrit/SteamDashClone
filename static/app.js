@@ -72,6 +72,33 @@ async function loadGame(name, appid) {
     const forecastData = await forecastRes.json();
 
     drawChart(history, forecastData.forecast, forecastData.high, forecastData.low);
+
+    // REVIEWS
+    loadReviews(appid);
+    async function loadReviews(appid) {
+    const res = await fetch(`/api/reviews/${appid}`);
+    const data = await res.json();
+
+    const list = document.getElementById("reviews-list");
+    list.innerHTML = "";
+
+    if (!data.reviews || data.reviews.length === 0) {
+        list.innerHTML = "<p>No reviews available.</p>";
+        return;
+    }
+
+    data.reviews.forEach(r => {
+        const card = document.createElement("div");
+        card.className = "review-card";
+        card.innerHTML = `
+            <p>${r.review}</p>
+            <small>👍 Helpful: ${r.votes_up} | 😂 Funny: ${r.votes_funny}</small>
+        `;
+        list.appendChild(card);
+    });
+}
+
+
 }
 
 // ---- CHART RENDERING ----

@@ -94,5 +94,13 @@ def top():
     return jsonify(games)
 
 
+@app.route("/api/reviews/<appid>")
+def get_reviews(appid):
+    url = f"https://store.steampowered.com/appreviews/{appid}?json=1&filter=top&language=english&num_per_page=5"
+    r = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+    return jsonify(r.json())
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
