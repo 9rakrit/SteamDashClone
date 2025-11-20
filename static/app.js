@@ -81,35 +81,13 @@ async function loadGame(name, appid) {
     drawChart(history, forecastData.forecast, forecastData.high, forecastData.low);
 
 
-    
-
-    // REVIEWS
-    loadReviews(appid);
-    async function loadReviews(appid) {
-    const res = await fetch(`/api/reviews/${appid}`);
-    const data = await res.json();
-
-    const list = document.getElementById("reviews-list");
-    list.innerHTML = "";
-
-    if (!data.reviews || data.reviews.length === 0) {
-        list.innerHTML = "<p>No reviews available.</p>";
-        return;
-    }
-
-    data.reviews.forEach(r => {
-        const card = document.createElement("div");
-        card.className = "review-card";
-        card.innerHTML = `
-            <p>${r.review}</p>
-            <small>👍 Helpful: ${r.votes_up} | 😂 Funny: ${r.votes_funny}</small>
-        `;
-        list.appendChild(card);
-    });
-}
+loadReviews(appid);
 
 
 }
+
+
+
 
 // ---- CHART RENDERING ----
 function drawChart(history, forecast, high, low) {
@@ -326,3 +304,83 @@ async function loadNews(appid) {
       list.appendChild(li);
   });
 }
+
+
+function calculateSentiment(reviews) {
+    let positive = 0, neutral = 0, negative = 0;
+
+    reviews.forEach(r => {
+        const text = r.review.toLowerCase();
+        if (text.includes("good") || text.includes("love") || text.includes("amazing")) positive++;
+        else if (text.includes("bad") || text.includes("hate") || text.includes("trash")) negative++;
+        else neutral++;
+    });
+
+    return [positive, neutral, negative];  // return array
+}
+
+
+
+function drawSentimentChart(values) {
+    const ctx = document.getElementById("sentimentChart").getContext("2d");
+
+    if (window.sentimentChartInstance) window.sentimentChartInstance.destroy();
+
+    window.sentimentChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Positive", "Neutral", "Negative"],
+            datasets: [{
+                label: "Review Count",
+                data: values,   // <-- array now works!
+                backgroundColor: ["#4ade80", "#facc15", "#f87171"]
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    ticks: { color: "#fff" },
+                    beginAtZero: true
+                },
+                x: {
+                    ticks: { color: "#fff" }
+                }
+            },
+            plugins: {
+                legend: { labels: { color: "#fff" } }
+            }
+        }
+    });
+}
+
+
+
+
+
+
+async function loadReviews(appid) {
+    const res = await fetch(`/api/reviews/${appid}`);
+    const data = await res.json();
+    console.log("RAW REVIEWS:", data);
+
+    const reviews = Array.isArray(data) ? data : data.reviews || data.data || [];
+
+    const reviewsContainer = document.getElementById("reviews-container");
+    reviewsContainer.innerHTML = `
+        <h3 class="section-title">Top Steam Reviews</h3>
+        ${reviews.map(r => `
+            <div class="review-card">
+                <p>${r.review}</p>
+                <div class="review-stats">👍 Helpful: ${r.helpful} • 😂 Funny: ${r.funny}</div>
+            </div>
+        `).join("")}
+    `;
+
+    // Sentiment
+const sentiments = calculateSentiment(reviews);
+drawSentimentChart(sentiments);
+
+
+}
+

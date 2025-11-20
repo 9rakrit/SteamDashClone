@@ -306,3 +306,32 @@ html.dark {
   padding-bottom: 10px;
   border-bottom: 1px solid #1e293b;
 }
+
+.sentiment-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.reviews-panel {
+  width: 65%;
+}
+
+.sentiment-card {
+  width: 35%;
+  background: #0f172a;
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+  box-shadow: 0 0 12px rgba(187,134,252,0.25);
+}
+
+#sentimentChart {
+  width: 100% !important;
+  height: 340px !important;
+}
+
+
+
