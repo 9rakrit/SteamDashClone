@@ -155,17 +155,16 @@ def trending():
         games = []
         for row in rows:
             cols = row.find_all("td")
-            name = cols[1].get_text(strip=True)
-            current = cols[2].get_text(strip=True)
-            peak_24h = cols[3].get_text(strip=True)
-            gain = cols[4].get_text(strip=True)
+            link = cols[1].find("a")["href"]   # /app/1245620 or /app/123456
+            appid = link.split("/")[-1].strip()
 
             games.append({
                 "rank": cols[0].get_text(strip=True),
-                "name": name,
-                "current": current,
-                "peak": peak_24h,
-                "gain": gain
+                "appid": appid,
+                "name": cols[1].get_text(strip=True),
+                "current": cols[2].get_text(strip=True),
+                "peak": cols[3].get_text(strip=True),
+                "gain": cols[4].get_text(strip=True),
             })
 
         return jsonify(games)
