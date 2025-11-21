@@ -409,28 +409,23 @@ function drawSentimentChart(values) {
 async function loadReviews(appid) {
     const res = await fetch(`/api/reviews/${appid}`);
     const data = await res.json();
-    console.log("RAW REVIEWS:", data);
-
-    const reviews = Array.isArray(data) ? data : data.reviews || data.data || [];
+    const reviews = data.reviews || [];
 
     const reviewsContainer = document.getElementById("reviews-container");
-    reviewsContainer.innerHTML = `
-        <h3 class="section-title">Top Steam Reviews</h3>
-        ${reviews.map(r => `
-            <div class="review-card">
-                <p>${r.review}</p>
-                <div class="review-stats">👍 Helpful: ${r.helpful} • 😂 Funny: ${r.funny}</div>
+    reviewsContainer.innerHTML = `<h3 class="section-title">Top Steam Reviews</h3>`;
+
+    reviews.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "review-card";
+        div.innerHTML = `
+            <p>${r.review}</p>
+            <div class="review-stats">
+                👍 Helpful: ${r.votes_up} • 😂 Funny: ${r.votes_funny}
             </div>
-        `).join("")}
-    `;
+        `;
+        reviewsContainer.appendChild(div);
+    });
 
-    // Sentiment
-const sentiments = calculateSentiment(reviews);
-drawSentimentChart(sentiments);
-
-
+    const sentiments = calculateSentiment(reviews);
+    drawSentimentChart(sentiments);
 }
-
-
-
-
