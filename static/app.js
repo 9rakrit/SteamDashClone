@@ -82,9 +82,28 @@ async function loadGame(name, appid) {
 
 
 loadReviews(appid);
+loadTrending();
+
+
 
 
 }
+
+async function loadTrending() {
+    const res = await fetch(`/api/trending`);
+    const games = await res.json();
+
+    const box = document.getElementById("trending-list");
+    box.innerHTML = games.map(g => `
+        <div class="trending-item">
+            <span>${g.name}</span>
+            <span class="trending-gain ${g.gain.startsWith('+') ? 'positive' : 'negative'}">
+                ${g.gain}
+            </span>
+        </div>
+    `).join("");
+}
+
 
 
 
@@ -305,6 +324,37 @@ async function loadNews(appid) {
   });
 }
 
+async function loadTrending() {
+    try {
+        const res = await fetch("/api/trending");
+        const games = await res.json();
+
+        const container = document.getElementById("trending-container");
+        container.innerHTML = "";
+
+        if (!games.length) {
+            container.innerHTML = "<p>No trending data available</p>";
+            return;
+        }
+
+        container.innerHTML = games.map(g => `
+            <div class="trending-card">
+                <div class="trend-rank">#${g.rank}</div>
+                <div class="trend-name">${g.name}</div>
+                <div class="trend-players">${g.current} players</div>
+                <div class="trend-gain">24h Gain: ${g.gain}</div>
+            </div>
+        `).join("");
+    } catch (err) {
+        console.error("Trending Load Error:", err);
+    }
+}
+loadTrending();
+
+
+
+
+
 
 function calculateSentiment(reviews) {
     let positive = 0, neutral = 0, negative = 0;
@@ -383,4 +433,7 @@ drawSentimentChart(sentiments);
 
 
 }
+
+
+
 

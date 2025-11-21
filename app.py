@@ -3,6 +3,7 @@ import requests
 import numpy as np
 import time
 from functools import lru_cache
+from bs4 import BeautifulSoup
 
 
 app = Flask(__name__)
@@ -141,6 +142,50 @@ def game_news(appid):
         return jsonify(requests.get(url).json()["appnews"]["newsitems"])
     except:
         return jsonify([])
+    
+@app.route("/api/trending")
+def trending():
+    try:
+        url = "https://steamcharts.com/top"
+        r = requests.get(url, timeout=10)
+        soup = BeautifulSoup(r.text, "html.parser")
+
+        rows = soup.select("table.common-table tbody tr")[:5]  # top 5 trending
+
+        games = []
+        for row in rows:
+            cols = row.find_all("td")
+            name = cols[1].get_text(strip=True)
+            current = cols[2].get_text(strip=True)
+            peak_24h = cols[3].get_text(strip=True)
+            gain = cols[4].get_text(strip=True)
+
+            games.append({
+                "rank": cols[0].get_text(strip=True),
+                "name": name,
+                "current": current,
+                "peak": peak_24h,
+                "gain": gain
+            })
+
+        return jsonify(games)
+    except Exception as e:
+        print("Trending error:", e)
+        return jsonify([])
+
+    
+@app.route("/api/trending-games")
+def trending_games():
+    trending_list = [
+        {"name": "Helldivers 2", "players": 450000},
+        {"name": "Palworld", "players": 320000},
+        {"name": "Apex Legends", "players": 210000},
+    ]
+    return jsonify(trending_list)   # ← wrap in jsonify
+
+
+
+
 
 
 

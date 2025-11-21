@@ -334,4 +334,90 @@ html.dark {
 }
 
 
+.trending-container {
+    padding: 15px;
+    background: #0f172a;
+    border-radius: 10px;
+    border: 1px solid #1e293b;
+    margin-top: 10px;
+}
+
+.trending-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: #fff;
+}
+
+.trending-gain {
+    font-weight: bold;
+}
+
+.trending-gain.positive { color: #4ade80; }
+.trending-gain.negative { color: #f87171; }
+
+
+.panel-row {
+    display: flex;
+    gap: 20px;
+}
+
+#trending-container {
+    width: 50%;
+    min-height: 350px;
+    padding: 15px;
+}
+
+#sentimentChart {
+    width: 100% !important;
+    height: 350px !important;
+}
+
+
+.trending-panel {
+    display: grid;
+    gap: 12px;
+}
+
+#trending-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 14px;
+}
+
+.trending-card {
+    background: #0b1220;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1px solid #1a2238;
+    box-shadow: 0 0 12px rgba(111, 66, 193, 0.25);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.trending-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 18px rgba(160, 99, 255, 0.45);
+}
+
+.trend-rank {
+    font-size: 14px;
+    font-weight: bold;
+    color: #9c6bff;
+}
+
+.trend-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.trend-players, .trend-gain {
+    font-size: 14px;
+    margin-top: 4px;
+    color: #9db4d5;
+}
 
